@@ -1,55 +1,43 @@
 import displayor
 import stepor
-import oscor
+from oscor import *
 import time
 import bpdb
 #tentative res 6600 sq!
 
 
 disper = displayor.displayor('/dev/ttyACM0', 115200)
-xx = stepor.sktep(7, 4, 17, 8, 14, 6600, 0.0035, "X axis")
-yy = stepor.sktep(22, 10, 9, 11, 15, 6600, 0.0035, "Y axis")
+xx = stepor.sktep(7, 4, 17, 8, 14, 6616, 0.0035, "X axis")
+yy = stepor.sktep(22, 10, 9, 11, 15, 6866, 0.0035, "Y axis")
 
-jog = True
-dopure = True
-poke = 0
-mp = oscor.pkmd
 
-def butjog():
-    global poke
-    stat = disper.but
-    if stat != 11:
-        print "button %d pressed" % stat
-        if stat == 5:
-            xx.step(1)
-        elif stat == 1:
-            xx.step(-1)
-        elif stat == 2:
-            yy.step(-1)
-        elif stat == 4:
-            yy.step(1)
-        elif stat == 8:
-            poke = oscor.mde + 1
-            poke = poke %4
-            mp(poke)
+
+
+
+
+
+
+
+def autokick():
+    disper(xx.pos, yy.pos)
+    xx.step(1)
 
 def main():
-    if jog: 
-        butjog()
-    else:
-        hihi = 0
-
-    disper(xx.pos,yy.pos)
+    print "ahha"
+    bpdb.set_trace()
+    disper.upda(666,666)
+    disper.prompt("fuckkkkk", 8)
+    print "yes"
+    xx.zeroin()
+    yy.zeroin()
+    if xx.zeroed and yy.zeroed:
+        autokick()
+        #make it loop
     
 if __name__ == "__main__":
-    if dopure:
-        oscor.startPD()
-        time.sleep(5)
-
     while True:
         try:
             main()
         except (KeyboardInterrupt, SystemExit):
-            oscor.endPD()
             xx.clean()
             yy.clean()

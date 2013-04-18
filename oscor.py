@@ -1,9 +1,12 @@
 import liblo
+import subprocess
 import os
 import time
 
 porter = 5555
 ip = "127.0.0.1"
+
+mde = 0
 
 presat = [
     [0, 0, 0, 0, 0],
@@ -15,20 +18,10 @@ presat = [
 ]
 
 def pkmd(prst):
+    mde = prst
     mess = liblo.Message("/sk/dat")
     for i in range(0,5):
         mess.add(presat[prst][i])
     liblo.send(liblo.Address(ip, porter), mess)
 
-def startPD():
-    os.system("amixer set PCM 0%")
-    time.sleep(1)
-    os.system("/home/pi/stll_kckng/init_patch.sh &")
-    time.sleep(1)
-    os.system("amixer set PCM 100%")
-
-def endPD():
-    os.system("amixer set PCM 0%")
-    time.sleep(1)
-    os.system("killall pd-extended")
 

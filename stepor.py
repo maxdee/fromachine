@@ -48,8 +48,21 @@ class sktep(object):
             GPIO.setup(self.pins[i], GPIO.OUT)  
         
     
-    def step(self, dir):
-        #adjust position and step count
+    def step(self, dar):        
+        if self.zeroed:
+            if dar == 1 and GPIO.input(self.end)==0 and self.pos > self.max/2:
+                print self.pos
+            #self.pos = self.max
+            #print 'off the end'
+                return 1
+            elif dar == -1 and GPIO.input(self.end)==0 and self.pos < self.max/2:
+                self.pos = 0
+                print 'up front'
+                return 0
+
+            return self.forcestep(dar)
+
+    def forcestep(self, dir):
         self.pos += dir
         self.ns += dir
         
@@ -57,18 +70,13 @@ class sktep(object):
             self.ns = 0
         elif self.ns < 0:
             self.ns = 3
-        
-        if dir == 1 and self.pos >= self.max:
-            print 'off the end'
-            return
-        elif dir == -1 and GPIO.input(self.end)==0:
-            print 'bump'
-            return
+
         
         for i in range(0,4):
             GPIO.output(self.pins[i], seq[self.ns][i])
         time.sleep(self.speed)
         self.parc()
+        return 2
 
 
     def move(self, dist):
@@ -77,29 +85,17 @@ class sktep(object):
 
 
     def zeroin(self):
+        for i in range(100):
+            self.forcestep(-1)
         while GPIO.input(self.end) == 1:
-            self.step(-1)
+            self.forcestep(-1)
         self.pos = 0
         self.zeroed = True
         print "%s is zeroed in" % self.name
-    
-    def zerotwo(self):
-        if GPIO.input(self.end) == 1:
-            self.step(-1)
-        elif GPIO.input(self.end) == 0:
-            if not zeroed:
-                self.pos = 0
-                self.zeroed = True
-                print "%s is zeroed in" % self.name            
-            else:
-                return
-
 
     def parc(self):
         for i in range(0,4):
             GPIO.output(self.pins[i], 0)
-
-
 
     def clean(self):
         for i in range(0,4):
