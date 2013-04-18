@@ -1,6 +1,7 @@
 import serial
 import psutil
 import time
+import bpdb
 from collections import deque
 
 titles = "CPU Xaxi Yaxi"
@@ -28,6 +29,7 @@ class displayor:
         self.parsly()
 
     def parsly(self):
+        time.sleep(0.01)
         dert = self.ser.readline()
         nums = [int(n) for n in dert.split('/')]
         self.but = nums[0]
