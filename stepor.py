@@ -69,7 +69,8 @@ class sktep(object):
                 print 'up front'
                 return 0
 
-            return self.forcestep(dar)
+            self.forcestep(dar)
+            return 2
 
     def forcestep(self, dir):
         self.pos += dir
@@ -81,7 +82,6 @@ class sktep(object):
         elif self.ns < 0:
             self.ns = 3
 
-        
         for i in range(0,4):
             GPIO.output(self.pins[i], seq[self.ns][i])
         time.sleep(self.speed)
@@ -93,7 +93,12 @@ class sktep(object):
         for i in range(0, abs(dist)):
             self.step(abs(dist)/dist)
 
-
+    def upzero(self, dr):
+        cnt = 0
+        while self.step(dr) == 2:
+            cnt+=1
+        self.move(-cnt*dr)
+            
     def zeroin(self):
         for i in range(100):
             self.forcestep(1)

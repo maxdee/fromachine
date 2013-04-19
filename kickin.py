@@ -12,16 +12,19 @@ disper = displayor('/dev/ttyACM0', 115200)
 xx = sktep(7, 4, 17, 8, 14, 6616, 0.0035, 20000, "X axis")
 yy = sktep(22, 10, 9, 11, 15, 6866, 0.0035, 20000, "Y axis")
 
-crt = cartor(6616,6866,50)
+crt = cartor(6616,6866,32)
 
 
 lpd = False
+debug = True
+
 
 def autokick():
     acura = 20000
     watched = False
     watchcnt = 0
-
+    if debug:
+        bpdb.set_trace()
     while True:
         disper.upda(xx.pos, yy.pos)
         distx = 0
@@ -38,10 +41,10 @@ def autokick():
 
         slop = (xx.acu+yy.acu)/1000
 
-
         xid = xx.think()
         yid = yy.think()
         
+        #determine if one needs to be bigger than other
         if randint(0,13)%2 == 1:
             distx = randint(100,1000)
         else:
@@ -51,23 +54,50 @@ def autokick():
 
         print "I am %d sloppy and %d watched." % (slop, watched)
         #print "I might go %d towards x %d, y %d and poke %d" % (dist, xid, yid, poke)
-
+        print crt.cart
         #fly
-        xx.move(randint(50,700))
-        yy.move(randint(50,700))
+        if watched:
+            fly(randr(100,500),randr(100,500))
+            cross(randr(100,200),1)
         
-        pkmd(poke)
-        xx.move(distx)
-        yy.move(disty)
-        pkmd(0)
-        if poke != 0:
-            crt.look(xx.pos,yy.pos,1)
-            print crt.cart
+        
+
+
+def poke(pk):
+    pkmd(pk)
+    if poke != 0:
+        crt.look(xx.pos,yy.pos,1)
+        
+def fly(tx,ty):
+    xx.move(tx)
+    yy.move(ty)
+
+def cross(sz,pk):
+    poke(pk)
+    xx.move(sz)
+    poke(0)
+    xx.move(-sz/2)
+    yy.move(-sz/2)
+    poke(pk)
+    yy.move(sz)
+    poke(0)
+
+def rect(sz,pk):
+    poke(pk)
+    xx.move(sz)
+    yy.move(sz)
+    xx.move(-sz)
+    yy.move(-sz)
+    poke(0)
+
+def randr(mn,sz):
+    pol = randint(-13,13)
+    pol = pol/abs(pol)
+    return randint(mn,sz*2)*pol
     
-
-
 def main():
-    print "doin main"
+    if debug:
+        bpdb.set_trace()
     disper.prompt("Zero in?", 8)
     print "yes"
     xx.zeroin()
