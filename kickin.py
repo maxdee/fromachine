@@ -43,22 +43,24 @@ def autokick():
 
         xid = xx.think()
         yid = yy.think()
-        poke = 2
+        style = 2
         sizer = 1500 - crt.sumer()*2
-        print "I am %d sloppy and %d watched." % (slop, watched)
+        if debug:
+            print "I am %d sloppy and %d watched." % (slop, watched)
         #print "I might go %d towards x %d, y %d and poke %d" % (dist, xid, yid, poke)
-        print crt.cart
+            print crt.cart
         
-
-        dirx = 0#xx.direct()
-        diry = 0#yy.direct()
-    
-        if dirx == 0:
-
+        dirx = 0
+        diry = 0
+        dirs = crt.nocks(xx.pos,yy.pos)
+        
+#if both are zero? or equal? flip flop...
 
         if watched:
-            fly(randr(100,500),randr(100,500),sizer)
-            cross(distx,disty)
+            fly(dirx*mag,diry*mag)
+            poke(style)
+            time.sleep(0.5)
+            poke(0)
         
         
 
@@ -67,6 +69,9 @@ def poke(pk):
     pkmd(pk)
     if pk != 0:
         crt.look(xx.pos,yy.pos,1)
+
+
+
         
 def fly(tx,ty,trgt):
     xx.move(tx-trgt/2)
