@@ -1,9 +1,8 @@
 import liblo
-import subprocess
 import os
 import time
 
-porter = 5555
+porter = 4342
 ip = "127.0.0.1"
 
 mde = 0
@@ -24,4 +23,12 @@ def pkmd(prst):
         mess.add(presat[prst][i])
     liblo.send(liblo.Address(ip, porter), mess)
 
+def startpd():
+    os.system("/home/pi/stll_kckng/launchpd.sh")
 
+def testr(prst):
+    mde = prst
+    mess = liblo.Message("/sk/test")
+    for i in range(0,5):
+        mess.add(presat[prst][i])
+    liblo.send(liblo.Address(ip, porter), mess)

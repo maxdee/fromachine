@@ -6,7 +6,7 @@ from collections import deque
 
 titles = "CPU Xaxi Yaxi"
 
-class displayor:
+class displayor(object):
     def __init__(self, dev, br):
         self.duinodev = dev
         self.baud = br
