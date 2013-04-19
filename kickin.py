@@ -24,6 +24,7 @@ def autokick():
     acura = 20000
     watched = False
     watchcnt = 0
+    axi = False
     if debug:
         bpdb.set_trace()
     while True:
@@ -45,23 +46,35 @@ def autokick():
         yid = yy.think()
         style = 2
         sizer = 1500 - crt.sumer()*2
-        if debug:
-            print "I am %d sloppy and %d watched." % (slop, watched)
-        #print "I might go %d towards x %d, y %d and poke %d" % (dist, xid, yid, poke)
-            print crt.cart
+            
+        dirs = crt.nocks(xx.pos,yy.pos)        
+        dirx = dirs[0]
+        diry = dirs[1]
         
-        dirx = 0
-        diry = 0
-        dirs = crt.nocks(xx.pos,yy.pos)
-        
-#if both are zero? or equal? flip flop...
-
+#flip flop
+        if dirx==diry:
+            if axi:
+                axi = False
+                if dirx == 0:
+                    dirx = randir() 
+                diry = 0
+            else:
+                axi = True
+                if diry == 0:
+                    diry = randir()
+                dirx = 0:
+            
+        mag = 500
+                
         if watched:
-            fly(dirx*mag,diry*mag)
+            fly(dirx*mag,diry*mag,0)
             poke(style)
             time.sleep(0.5)
             poke(0)
         
+        if debug:
+            print "I am %d sloppy and %d watched." % (slop, watched)
+        #print "I might go %d towards x %d, y %d and poke %d" % (dist, xid, yid, poke)
         
 
 
@@ -95,10 +108,9 @@ def rect(sz,pk):
     yy.move(-sz)
     poke(0)
 
-def randr(mn,sz):
+def randir():
     pol = randint(-13,13)
-    pol = pol/abs(pol)
-    return randint(mn,sz*2)*pol
+    return = pol/abs(pol)
     
 def main():
     if debug:
