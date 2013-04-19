@@ -20,6 +20,10 @@ class displayor(object):
             print 'this shit ' + duinodev + ' is not plugged in'
             time.sleep(3)
     
+    def tell(self, ha):
+        self.ser.write(ha)
+        self.parsly()
+
     def upda(self, x, y):
         cpu = '%0*d ' % (3, int(psutil.cpu_percent()))
         valers = '                           ' + cpu + '%0*d ' % (4,abs(x)) + '%0*d ' % (4,abs(y)) 
@@ -36,14 +40,17 @@ class displayor(object):
         self.prox = nums[1]
         self.ser.flushInput()
 
-    def prompt(self, ask, one):
+    def prompt(self, ask):
         print "Asking user"
         self.ser.write(ask)
         self.parsly()
-        while self.but != one:
+        while self.but == 0:
             self.ser.write(ask)
             self.parsly()
             time.sleep(0.5)
-        self.ser.write("Ok")
+        bat = self.but
+        self.ser.write("ok")
+        print "Ok, %d is pressed" % (bat)
         self.parsly()
         self.but = 0
+        return bat

@@ -1,4 +1,5 @@
 from random import randint
+import cPickle
 #could be divided into two in each axis
 class cartor(object):
     def __init__(self , xs, ys, rs):
@@ -8,6 +9,15 @@ class cartor(object):
         self.mulx = xs/rs
         self.muly = ys/rs
         self.cart = [[0 for i in range(rs+1)] for j in range(rs+1)]        
+
+    def saver(self):
+        cPickle.dump(self.cart, open('map.p', 'wp'))
+        print "map saved"
+
+    def loader(self):
+        self.cart = cPickle.load(open('map.p', 'rp'))
+        print "map loaded"
+
 
     def posr(self,px,py):
         xl = px/self.mulx
@@ -19,13 +29,13 @@ class cartor(object):
     def look(self,px,py,act):
         loc = self.posr(px,py)
         if act == 1:
-            print "I poked at %d %d" % (loc[0],loc[1])
+            #print "I poked at %d %d" % (loc[0],loc[1])
             self.cart[loc[0]][loc[1]] += 1
         return self.cart[loc[0]][loc[1]]
     
 
     def nocks(self,px,py):
-        print "where are your knocks? Gaaabe"
+        #print "where are your knocks? Gaaabe"
         loc = self.posr(px,py)
         x = loc[0]
         y = loc[1]

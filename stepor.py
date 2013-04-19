@@ -95,21 +95,19 @@ class sktep(object):
 
     def upzero(self, dr):
         cnt = 0
+        print "ATTEMPTING TO REZERO"
         while self.step(dr) == 2:
             cnt+=1
         self.move(-cnt*dr)
             
-#scrap this one?
+#scrap this one? still used to rezero
     def direct(self):
         marge = 500
-        if self.pos < marge:
-            self.upzero(-1)
-            return 1
-        elif self.pos > self.max-marge:
-            self.upzero(1)
-            return -1
-        else:
-            return 0
+        if self.acu > 15000:
+            if self.pos < marge:
+                self.upzero(-1)
+            elif self.pos > self.max-marge:
+                self.upzero(1)
  
     def zeroin(self):
         for i in range(100):
