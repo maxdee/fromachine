@@ -12,6 +12,7 @@ disper = displayor('/dev/ttyACM0', 115200)
 xx = sktep(7, 4, 17, 8, 14, 6616, 0.0035, 20000, "X axis")
 yy = sktep(22, 10, 9, 11, 15, 6866, 0.0035, 20000, "Y axis")
 
+
 crt = cartor(6616,6866,32)
 
 
@@ -29,6 +30,7 @@ def autokick():
         disper.upda(xx.pos, yy.pos)
         distx = 0
         disty = 0
+        slop = (xx.acu+yy.acu)/1000
 
         if disper.prox > 20:
             watched = True
@@ -39,38 +41,36 @@ def autokick():
             if watchcnt < 0:
                 watched = False
 
-        slop = (xx.acu+yy.acu)/1000
-
         xid = xx.think()
         yid = yy.think()
-        
-        #determine if one needs to be bigger than other
-        if randint(0,13)%2 == 1:
-            distx = randint(100,1000)
-        else:
-            disty = randint(100,1000)
-        
         poke = 2
-
+        sizer = 1500 - crt.sumer()*2
         print "I am %d sloppy and %d watched." % (slop, watched)
         #print "I might go %d towards x %d, y %d and poke %d" % (dist, xid, yid, poke)
         print crt.cart
-        #fly
+        
+
+        dirx = 0#xx.direct()
+        diry = 0#yy.direct()
+    
+        if dirx == 0:
+
+
         if watched:
-            fly(randr(100,500),randr(100,500))
-            cross(randr(100,200),1)
+            fly(randr(100,500),randr(100,500),sizer)
+            cross(distx,disty)
         
         
 
 
 def poke(pk):
     pkmd(pk)
-    if poke != 0:
+    if pk != 0:
         crt.look(xx.pos,yy.pos,1)
         
-def fly(tx,ty):
-    xx.move(tx)
-    yy.move(ty)
+def fly(tx,ty,trgt):
+    xx.move(tx-trgt/2)
+    yy.move(ty-trgt/2)
 
 def cross(sz,pk):
     poke(pk)

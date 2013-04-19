@@ -99,6 +99,18 @@ class sktep(object):
             cnt+=1
         self.move(-cnt*dr)
             
+#scrap this one?
+    def direct(self):
+        marge = 500
+        if self.pos < marge:
+            self.upzero(-1)
+            return 1
+        elif self.pos > self.max-marge:
+            self.upzero(1)
+            return -1
+        else:
+            return 0
+ 
     def zeroin(self):
         for i in range(100):
             self.forcestep(1)
